@@ -1,0 +1,91 @@
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from .serializers import *
+
+from .models import *
+
+
+@api_view(['GET'])
+def apiOverview(request):
+    api_urls = {
+    'List':'/branch-list/',
+    'Detail View':'/branch-detail/<str:pk>/',
+    'Create':'/branch-create/',
+    'Update':'/branch-update/<str:pk>/',
+    'Delete':'/branch-delete/<str:pk>/',
+
+    'List':'/employee-list/',
+    'Detail View':'/employee-detail/<str:pk>/',
+    'Create':'/employee-create/',
+    'Update':'/employee-update/<str:pk>/',
+    'Delete':'/employee-delete/<str:pk>/',
+    }
+    return Response(api_urls)
+
+'''Branch'''
+@api_view(['GET'])
+def branchList(request):
+    branches = Branch.objects.all()
+    serializer = BranchSerializer(branches, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def branchDetail(request, pk):
+    branches = Branch.objects.get(id=pk)
+    serializer = BranchSerializer(branches, many=False)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def branchCreate(request):
+    serializer = BranchSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def branchUpdate(request, pk):
+    branch = Branch.objects.get(id=pk)
+    serializer = BranchSerializer(instance=branch, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+    return Response(serializer.data)
+
+@api_view(['DELETE'])
+def branchDelete(request, pk):
+    branch = Branch.objects.get(id=pk)
+    branch.delete()
+    return Response("Branch Deleted Successfully")
+
+'''Employee'''
+@api_view(['GET'])
+def employeeList(request):
+    employees = Employee.objects.all()
+    serializer = EmployeeSerializer(employees, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def employeeDetail(request, pk):
+    employees = Employee.objects.get(id=pk)
+    serializer = EmployeeSerializer(employees, many=False)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def employeeCreate(request):
+    serializer = EmployeeSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def employeeUpdate(request, pk):
+    employee = Employee.objects.get(id=pk)
+    serializer = EmployeeSerializer(instance=employee, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+    return Response(serializer.data)
+
+@api_view(['DELETE'])
+def employeeDelete(request, pk):
+    employee = Employee.objects.get(id=pk)
+    employee.delete()
+    return Response("Branch Deleted Successfully")
